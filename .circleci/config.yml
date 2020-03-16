@@ -1,3 +1,23 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@ryosuke-sashihara 
+kurumai
+/
+circleci-step-by-step
+0
+8144
+ Code Issues 0 Pull requests 1 Actions Projects 0 Wiki Security Insights
+circleci-step-by-step/.circleci/config.yml
+@kurumai kurumai Update config.yml
+b3b0db4 13 days ago
+115 lines (99 sloc)  3.16 KB
+  
 version: 2
 jobs:
   jdk-8:
@@ -8,6 +28,9 @@ jobs:
       environment:
         POSTGRES_USER: root
         POSTGRES_DB: circle_test
+    
+    parallelism: 4
+
     steps:
     - checkout
     - run: echo "Hello CircleCI!"
@@ -22,19 +45,26 @@ jobs:
         paths:
             - ~/.m2
         key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
-    - run: mvn package
+    - run: 
+        command: |
+            mvn test -Dtest=$(circleci tests glob "src/test/**/*.java" | circleci tests split --split-by=timings | sed -E 's/^(.*\/)*//' | sed -z 's/\n/,/g')
+            mvn package -Dmaven.test.skip
     - store_test_results:
         path: target/surefire-reports
     - store_artifacts:
-        path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
+        path: target/step-by-step-0.0.1-SNAPSHOT.jar
 
   jdk-10:
+    working_directory: ~/circleci-step-by-step
     docker:
     - image: circleci/openjdk:10-jdk-browsers
     - image: circleci/postgres:9.6-alpine
       environment:
         POSTGRES_USER: root
         POSTGRES_DB: circle_test
+    
+    parallelism: 4
+
     steps:
     - checkout
     - run: echo "Hello CircleCI!"
@@ -49,19 +79,26 @@ jobs:
         paths:
             - ~/.m2
         key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
-    - run: mvn package
+    - run: 
+        command: |
+            mvn test -Dtest=$(circleci tests glob "src/test/**/*.java" | circleci tests split --split-by=timings | sed -E 's/^(.*\/)*//' | sed -z 's/\n/,/g')
+            mvn package -Dmaven.test.skip
     - store_test_results:
         path: target/surefire-reports
     - store_artifacts:
-        path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
+        path: target/step-by-step-0.0.1-SNAPSHOT.jar
 
   jdk-11:
+    working_directory: ~/circleci-step-by-step
     docker:
     - image: circleci/openjdk:11-jdk-browsers
     - image: circleci/postgres:9.6-alpine
       environment:
         POSTGRES_USER: root
         POSTGRES_DB: circle_test
+    
+    parallelism: 4
+
     steps:
     - checkout
     - run: echo "Hello CircleCI!"
@@ -76,11 +113,14 @@ jobs:
         paths:
             - ~/.m2
         key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
-    - run: mvn package
+    - run: 
+        command: |
+            mvn test -Dtest=$(circleci tests glob "src/test/**/*.java" | circleci tests split --split-by=timings | sed -E 's/^(.*\/)*//' | sed -z 's/\n/,/g')
+            mvn package -Dmaven.test.skip
     - store_test_results:
         path: target/surefire-reports
     - store_artifacts:
-        path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
+        path: target/step-by-step-0.0.1-SNAPSHOT.jar
 
 workflows:
   version: 2
@@ -89,5 +129,3 @@ workflows:
       - "jdk-8"
       - "jdk-10"
       - "jdk-11"
-
-
