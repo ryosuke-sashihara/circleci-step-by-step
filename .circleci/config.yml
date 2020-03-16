@@ -1,23 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@ryosuke-sashihara 
-kurumai
-/
-circleci-step-by-step
-0
-8144
- Code Issues 0 Pull requests 1 Actions Projects 0 Wiki Security Insights
-circleci-step-by-step/.circleci/config.yml
-@kurumai kurumai Update config.yml
-b3b0db4 13 days ago
-115 lines (99 sloc)  3.16 KB
-  
 version: 2
 jobs:
   jdk-8:
